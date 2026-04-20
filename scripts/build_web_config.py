@@ -1,11 +1,15 @@
-"""Build script for the admin Web UI deployed to GitHub Pages.
+"""Build the encrypted config.js for the admin Web UI.
 
 Reads ADMIN_KEY, SUPABASE_URL, SUPABASE_SERVICE_KEY from env. Encrypts the
-service key with PBKDF2(ADMIN_KEY) + AES-GCM, then writes web/dist/ with
-the static assets + a generated config.js that holds only the ciphertext.
+service key with PBKDF2(ADMIN_KEY) + AES-GCM, then writes the resulting
+``config.js`` into the Vite build output (``web/dist`` by default).
 
-If any required env var is missing, exits 1 so the GitHub Actions build
-fails visibly.
+Run this AFTER ``npm run build`` so that ``web/dist`` already contains the
+Vite-generated assets. The CI workflow at ``.github/workflows/pages.yml``
+chains the two steps together.
+
+Exits non-zero if any required env var is missing or the dist directory
+doesn't exist — the GitHub Actions build fails visibly in that case.
 """
 from __future__ import annotations
 
@@ -13,7 +17,6 @@ import base64
 import json
 import os
 import secrets
-import shutil
 import sys
 from hashlib import pbkdf2_hmac
 from pathlib import Path
@@ -26,8 +29,7 @@ IV_BYTES = 12
 KEY_BYTES = 32  # AES-256
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
-WEB_SRC = REPO_ROOT / "web"
-STATIC_FILES = ("index.html", "app.js", "styles.css")
+DIST_DIR = REPO_ROOT / "web" / "dist"
 REQUIRED_ENV = ("ADMIN_KEY", "SUPABASE_URL", "SUPABASE_SERVICE_KEY")
 
 
@@ -60,16 +62,6 @@ def _encrypt(admin_key: str, service_key: str) -> dict[str, object]:
     }
 
 
-def _copy_static(dist: Path) -> None:
-    dist.mkdir(parents=True, exist_ok=True)
-    for name in STATIC_FILES:
-        src = WEB_SRC / name
-        if not src.exists():
-            print(f"ERROR: missing static asset {src}", file=sys.stderr)
-            sys.exit(1)
-        shutil.copy2(src, dist / name)
-
-
 def _write_config(dist: Path, payload: dict[str, object]) -> None:
     body = json.dumps(payload, separators=(",", ":"), sort_keys=True)
     (dist / "config.js").write_text(
@@ -80,12 +72,18 @@ def _write_config(dist: Path, payload: dict[str, object]) -> None:
 
 def main() -> int:
     env = _require_env()
-    dist = Path(os.environ.get("WEB_DIST", str(WEB_SRC / "dist")))
-    _copy_static(dist)
+    dist = Path(os.environ.get("WEB_DIST", str(DIST_DIR)))
+    if not dist.is_dir():
+        print(
+            f"ERROR: dist directory {dist} does not exist. "
+            "Run `npm --prefix web ci && npm --prefix web run build` first.",
+            file=sys.stderr,
+        )
+        sys.exit(1)
     encrypted = _encrypt(env["ADMIN_KEY"], env["SUPABASE_SERVICE_KEY"])
     payload = {"supabaseUrl": env["SUPABASE_URL"], **encrypted}
     _write_config(dist, payload)
-    print(f"OK: wrote {dist}/config.js and static assets")
+    print(f"OK: wrote {dist}/config.js")
     return 0
 
 

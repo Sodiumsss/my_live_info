@@ -1,112 +1,14 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>演唱会信息 · 管理台</title>
-  <link rel="stylesheet" href="styles.css" />
-</head>
-<body>
-  <div id="login" class="login-screen">
-    <form id="login-form" class="login-card">
-      <h1>演唱会信息 · 管理台</h1>
-      <label for="admin-key">密钥</label>
-      <input id="admin-key" type="password" autocomplete="off" autofocus required />
-      <button type="submit">进入</button>
-      <p id="login-error" class="error" hidden></p>
-    </form>
-  </div>
-
-  <main id="app" hidden>
-    <header class="app-header">
-      <h1>演唱会信息 · 管理台</h1>
-      <nav class="tabs" role="tablist">
-        <button class="tab active" data-tab="artists" role="tab">艺人</button>
-        <button class="tab" data-tab="users" role="tab">用户</button>
-        <button class="tab" data-tab="subscriptions" role="tab">订阅</button>
-        <button class="tab" data-tab="concerts" role="tab">演唱会</button>
-      </nav>
-    </header>
-
-    <section id="tab-artists" class="tab-panel active">
-      <form id="artist-form" class="inline-form">
-        <input id="artist-name" type="text" placeholder="艺人规范名(canonical_name)" required />
-        <button type="submit">添加</button>
-      </form>
-      <table id="artists-table">
-        <thead><tr><th>名字</th><th>添加时间</th><th></th></tr></thead>
-        <tbody></tbody>
-      </table>
-    </section>
-
-    <section id="tab-users" class="tab-panel" hidden>
-      <form id="user-form" class="stacked-form">
-        <input type="hidden" id="user-id" />
-        <label>昵称 <input id="user-name" type="text" required /></label>
-        <label>邮箱 <input id="user-email" type="email" /></label>
-        <label>飞书 webhook <input id="user-feishu" type="url" placeholder="https://open.feishu.cn/..." /></label>
-        <label class="checkbox">
-          <input id="user-notify" type="checkbox" checked /> 接收状态变更通知
-        </label>
-        <div class="form-actions">
-          <button type="submit" id="user-submit">添加</button>
-          <button type="button" id="user-cancel" hidden>取消编辑</button>
-        </div>
-      </form>
-      <table id="users-table">
-        <thead>
-          <tr><th>昵称</th><th>邮箱</th><th>飞书</th><th>状态通知</th><th></th></tr>
-        </thead>
-        <tbody></tbody>
-      </table>
-    </section>
-
-    <section id="tab-subscriptions" class="tab-panel" hidden>
-      <form id="subscription-form" class="inline-form">
-        <select id="sub-user" required></select>
-        <select id="sub-artist" required></select>
-        <button type="submit">订阅</button>
-      </form>
-      <table id="subscriptions-table">
-        <thead><tr><th>用户</th><th>艺人</th><th>订阅时间</th><th></th></tr></thead>
-        <tbody></tbody>
-      </table>
-    </section>
-
-    <section id="tab-concerts" class="tab-panel" hidden>
-      <div class="inline-form">
-        <select id="concert-artist-filter">
-          <option value="">全部艺人</option>
-        </select>
-        <select id="concert-status-filter">
-          <option value="">全部状态</option>
-          <option value="verified">verified</option>
-          <option value="unverified">unverified</option>
-        </select>
-        <select id="concert-sale-filter">
-          <option value="">全部开票状态</option>
-          <option value="announced">announced</option>
-          <option value="on_sale">on_sale</option>
-          <option value="sold_out">sold_out</option>
-          <option value="unknown">unknown</option>
-        </select>
-        <button type="button" id="concerts-refresh">刷新</button>
-      </div>
-      <table id="concerts-table">
-        <thead>
-          <tr>
-            <th>艺人</th><th>城市</th><th>日期</th><th>场馆</th>
-            <th>状态</th><th>开票</th><th>开票时间</th><th>来源</th>
-          </tr>
-        </thead>
-        <tbody></tbody>
-      </table>
-    </section>
-
-    <div id="toast" class="toast" hidden></div>
-  </main>
-
-  <script src="config.js"></script>
-  <script type="module" src="app.js"></script>
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>演唱会信息 · 管理台</title>
+    <!-- 由 scripts/build_web_config.py 在构建后写入；本地开发可以手动建一份 web/public/config.js -->
+    <script src="./config.js"></script>
+  </head>
+  <body>
+    <div id="app"></div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
 </html>
