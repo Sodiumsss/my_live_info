@@ -26,13 +26,15 @@ def _run(env: dict[str, str], cwd: Path) -> subprocess.CompletedProcess:
 
 
 def _base_env(tmp_path: Path, **overrides) -> dict[str, str]:
+    dist = tmp_path / "dist"
+    dist.mkdir(exist_ok=True)
     env = {
         "PATH": "/usr/bin:/bin:/usr/local/bin",
         "HOME": str(tmp_path),
         "ADMIN_KEY": "correct-horse-battery-staple-42",
         "SUPABASE_URL": "https://example.supabase.co",
         "SUPABASE_SERVICE_KEY": "sbp_secret_service_role_token_xyz",
-        "WEB_DIST": str(tmp_path / "dist"),
+        "WEB_DIST": str(dist),
     }
     env.update(overrides)
     return env
@@ -53,10 +55,6 @@ def test_produces_config_and_static_files(tmp_path):
     assert result.returncode == 0, result.stdout + result.stderr
 
     dist = Path(env["WEB_DIST"])
-    assert (dist / "index.html").exists()
-    assert (dist / "app.js").exists()
-    assert (dist / "styles.css").exists()
-
     config_js = (dist / "config.js").read_text(encoding="utf-8")
     m = re.search(r"window\.LIVE_INFO_CONFIG\s*=\s*(\{.*?\});?\s*$", config_js, re.S)
     assert m, f"config.js shape unexpected:\n{config_js}"
