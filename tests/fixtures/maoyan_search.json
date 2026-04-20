@@ -1,0 +1,24 @@
+{
+  "data": {
+    "list": [
+      {
+        "performanceId": "111",
+        "name": "Taylor Swift Eras Tour · 上海",
+        "shopName": "梅赛德斯奔驰文化中心",
+        "cityName": "上海",
+        "showTimeRange": "2026.08.12",
+        "priceRange": "380-1800",
+        "ticketStatus": 1
+      },
+      {
+        "performanceId": "112",
+        "name": "Taylor Swift Eras Tour · 北京",
+        "shopName": "国家体育场",
+        "cityName": "北京",
+        "showTimeRange": "2026.08.20 - 2026.08.21",
+        "priceRange": "",
+        "ticketStatus": 0
+      }
+    ]
+  }
+}
