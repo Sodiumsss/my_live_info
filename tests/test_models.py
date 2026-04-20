@@ -1,4 +1,4 @@
-from datetime import date, datetime, timezone
+from datetime import date
 from live_info.models import Artist, Concert, RawShow, User, SaleStatus, Status
 
 

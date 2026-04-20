@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-from dataclasses import dataclass
 from datetime import date
 from typing import Iterable
 
@@ -19,8 +18,8 @@ def merge_raw_shows(
     out: list[Concert] = []
     for key in keys:
         m = my_map.get(key)
-        l = ll_map.get(key)
-        status = Status.VERIFIED if (m and l) else Status.UNVERIFIED
+        ll = ll_map.get(key)
+        status = Status.VERIFIED if (m and ll) else Status.UNVERIFIED
         sale = m.sale_status if m else SaleStatus.UNKNOWN
         out.append(
             Concert(
@@ -28,13 +27,13 @@ def merge_raw_shows(
                 artist_id=artist_id,
                 city=key[0],
                 show_date=key[1],
-                venue=(m.venue if m else None) or (l.venue if l else None),
+                venue=(m.venue if m else None) or (ll.venue if ll else None),
                 status=status,
                 sale_status=sale,
                 sale_open_at=m.sale_open_at if m else None,
                 source_url=m.source_url if m else None,
                 source_performance_id=m.source_id if m else None,
-                llm_sources=l.llm_source_urls if l else None,
+                llm_sources=ll.llm_source_urls if ll else None,
             )
         )
     return out

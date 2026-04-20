@@ -46,7 +46,7 @@ async def run(dry_run: bool = False) -> int:
         MaoyanCrawler() as crawler,
         FeishuNotifier() as feishu,
     ):
-        alias = AliasResolver(repo=repo, llm=llm)
+        _alias = AliasResolver(repo=repo, llm=llm)  # noqa: F841 — reserved for future use
         verifier = LLMVerifier(llm=llm)
 
         for artist in artists:

@@ -1,8 +1,6 @@
-from datetime import date
 from unittest.mock import MagicMock
 
 from live_info.db.repositories import Repository
-from live_info.models import Concert, SaleStatus, Status
 
 
 class FakeTable:

@@ -3,7 +3,6 @@ from datetime import date
 from pathlib import Path
 
 import httpx
-import pytest
 import respx
 
 from live_info.crawlers.maoyan import MaoyanCrawler, map_ticket_status

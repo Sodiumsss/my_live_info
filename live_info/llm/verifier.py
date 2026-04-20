@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import json
 import logging
-from datetime import date, datetime
+from datetime import datetime
 from typing import Protocol
 
 from live_info.models import RawShow, SaleStatus

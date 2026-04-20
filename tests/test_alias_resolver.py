@@ -1,4 +1,3 @@
-import pytest
 from unittest.mock import AsyncMock
 
 from live_info.llm.alias_resolver import AliasResolver

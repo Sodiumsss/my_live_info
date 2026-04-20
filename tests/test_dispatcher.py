@@ -51,7 +51,9 @@ async def test_dispatch_sends_both_channels_when_configured():
     subscribers = {"a1": ["u1"]}
     events = [_ev("a1")]
 
-    feishu = AsyncMock(); feishu.send.return_value = True
-    email = MagicMock(); email.send.return_value = True
+    feishu = AsyncMock()
+    feishu.send.return_value = True
+    email = MagicMock()
+    email.send.return_value = True
     result = await dispatch(events, users, subscribers, feishu=feishu, email=email)
     assert result["u1"] == {"feishu": True, "email": True, "events": 1}
