@@ -40,7 +40,25 @@ class LLMClient:
             "temperature": 0.2,
         }
         if enable_web_search:
-            body["tools"] = [{"type": "web_search"}]
+            body["tools"] = [
+                {
+                    "type": "function",
+                    "function": {
+                        "name": "web_search",
+                        "description": "Search the public web for up-to-date information.",
+                        "parameters": {
+                            "type": "object",
+                            "properties": {
+                                "query": {
+                                    "type": "string",
+                                    "description": "Search query string.",
+                                },
+                            },
+                            "required": ["query"],
+                        },
+                    },
+                }
+            ]
             body["tool_choice"] = "auto"
         if response_format_json:
             body["response_format"] = {"type": "json_object"}
